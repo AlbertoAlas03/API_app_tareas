@@ -88,7 +88,7 @@ const handleInteraction = async (req, res) => {
                 };
 
                 //fetch POST
-                await axios.post('http://localhost:3001/api/addschedule', scheduleData, {
+                await axios.post('https://api-app-tareas.onrender.com/api/addschedule', scheduleData, {
                     headers: {
                         'Authorization': `Bearer ${userToken}`
                     }
@@ -118,7 +118,7 @@ const handleInteraction = async (req, res) => {
                     date: state.activityDate
                 };
 
-                await axios.post('http://localhost:3001/api/addactivity', activityData, {
+                await axios.post('https://api-app-tareas.onrender.com/api/addactivity', activityData, {
                     headers: {
                         'Authorization': `Bearer ${userToken}`
                     }
