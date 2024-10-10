@@ -94,7 +94,7 @@ const handleInteraction = async (req, res) => {
                     }
                 });
 
-                reply = '¡Genial!, ya eh creado el horario que has solicitado, puedes ir a revisar a tu sección donde tienes todos tus horarios agendados :).';
+                reply = '¡Genial!, ya he creado el horario que has solicitado, puedes ir a revisar a tu sección donde tienes todos tus horarios agendados :).';
                 // Reiniciar el estado de la conversación
                 state = { stage: 'initial' };
                 break
@@ -124,7 +124,7 @@ const handleInteraction = async (req, res) => {
                     }
                 });
 
-                reply = '¡Genial!, ya eh creado la actividad que me has solicitado, puedes ir a revisar a tu sección donde tienes todas tus actividades agendadas :).';
+                reply = '¡Genial!, ya he creado la actividad que me has solicitado, puedes ir a revisar a tu sección donde tienes todas tus actividades agendadas :).';
                 // Reiniciar el estado de la conversación
                 state = { stage: 'initial' };
                 break;
