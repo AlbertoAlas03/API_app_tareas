@@ -439,3 +439,54 @@ exports.listsactivity = async (req, res) => {
         next();
     }
 };
+
+
+//enviar notificaciones(correo) de las actividades pendientes 
+/*exports.notificacion = async(req, res)=>{
+    const lista=[];//para meter las tareas pendientes 
+    try {
+       
+        const email = await DataUsers.findOne({ email })|| null;
+
+       
+        //configuración del correo
+        const transporter = nodemailer.createTransport({
+            service: 'Gmail',  
+            auth: {
+                user:process.env.Email_User,
+                pass:process.env.Email_Pass         
+            }
+        });
+        // datos del correo a enviar
+        const mailOptions = {
+            from:process.env.Email_User,
+            to: email,
+            subject: 'Lista de tareas pendientes',
+          //text: `Aqui esta la lista de tareas pendientes:\n\n${lista.join(', ')}`
+            html: `
+        <h1>Lista de tareas pendientes</h1>
+        <p>Debes verificar tu cuenta con el siguiente código:</p>
+        <ul>
+            ${lista.map(item => `<li>${item}</li>`).join('')}
+        </ul>`
+          
+        };
+
+        // Enviar el correo de verificación
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+                return res.status(500).json({ message: "Error no se pudo enviar el correo  vuelve a intentar"});
+            } else {
+                console.log('Correo enviado: ' + info.response);
+                //data.save(); para enviar el correo con la lista 
+                return res.status(200).json({ message: "Lista de tareas enviadas. Revisa tu correo para verificar." });
+            }
+
+        });
+       
+    } catch (error) {
+        res.status(500).json({ message: "Error al crear el usuario", error: error.message });
+     
+
+}}*/
