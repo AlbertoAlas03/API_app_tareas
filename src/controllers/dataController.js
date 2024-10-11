@@ -277,7 +277,7 @@ exports.login = async (req, res) => {
 //buscar todos los horarios
 exports.listshedules = async (req, res) => {
     try {
-        const data = await DataSchedules.find({UserId: req.params.id}); // Get schedules filtering by user id
+        const data = await DataSchedules.find({idUser: req.params.id}); // Get schedules filtering by user id
         res.json(data);
     } catch (error) {
         console.log(error);
