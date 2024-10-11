@@ -446,6 +446,10 @@ exports.notificacion = async(req, res)=>{
 
     const { email } = req.body;
     try {
+        const user = await DataUsers.findOne({ email: email });
+        if (!user) {
+            return res.status(400).json({ message: "Usuario no encontrado" });
+        }
        
          // Obtener las actividades pendientes (status: false)
          const pendingActivities = await DataActivity.find({ idUser: user._id, status: false });
