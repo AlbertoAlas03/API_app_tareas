@@ -442,14 +442,15 @@ exports.listsactivity = async (req, res) => {
 
 
 //enviar notificaciones(correo) de las actividades pendientes 
-/*exports.notificacion = async(req, res)=>{
-    const lista=[];//para meter las tareas pendientes 
+exports.notificacion = async(req, res)=>{
+
+    const { email } = req.body;
     try {
        
-        const email = await DataUsers.findOne({ email })|| null;
-
-       
-        //configuración del correo
+         // Obtener las actividades pendientes (status: false)
+         const pendingActivities = await DataActivity.find({ idUser: user._id, status: false });
+         
+            //configuración del correo
         const transporter = nodemailer.createTransport({
             service: 'Gmail',  
             auth: {
@@ -457,36 +458,65 @@ exports.listsactivity = async (req, res) => {
                 pass:process.env.Email_Pass         
             }
         });
+         if (pendingActivities.length === 0) {
+             //return res.status(200).json({ message: "No hay tareas pendientes." });
+             const mailOptions = {
+                from: process.env.Email_User,
+                to: email,
+                subject: 'No hay tareas pendientes',
+                html: `
+                    <h1>No hay tareas pendientes</h1>
+                    <p>Felicidades actualmente no tienes ninguna tarea pendiente.</p>
+                `
+            };
+
+            // Enviar el correo de notificación
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.log(error);
+                    return res.status(500).json({ message: "Error: no se pudo enviar el correo, vuelve a intentar" });
+                } else {
+                    console.log('Correo enviado: ' + info.response);
+                    return res.status(200).json({ message: "Correo de notificación enviado." });
+                }
+            });
+         }
+         else{
+     
+         
+         const activitiesList = pendingActivities.map(activity => `<li>${activity.name}: ${activity.description} - Fecha: ${activity.date.toDateString()}</li>`).join('');
+         
         // datos del correo a enviar
         const mailOptions = {
             from:process.env.Email_User,
             to: email,
             subject: 'Lista de tareas pendientes',
-          //text: `Aqui esta la lista de tareas pendientes:\n\n${lista.join(', ')}`
+       
             html: `
         <h1>Lista de tareas pendientes</h1>
         <p>Debes verificar tu cuenta con el siguiente código:</p>
         <ul>
-            ${lista.map(item => `<li>${item}</li>`).join('')}
+             ${activitiesList}
         </ul>`
           
         };
 
-        // Enviar el correo de verificación
+        // Enviar el correo de notificaciones
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log(error);
                 return res.status(500).json({ message: "Error no se pudo enviar el correo  vuelve a intentar"});
             } else {
                 console.log('Correo enviado: ' + info.response);
-                //data.save(); para enviar el correo con la lista 
-                return res.status(200).json({ message: "Lista de tareas enviadas. Revisa tu correo para verificar." });
+              
+                return res.status(200).json({ message: "Lista de tareas enviadas. Revisa tu correo para ver la lista de tareas pendientes." });
             }
 
         });
+    }
        
     } catch (error) {
-        res.status(500).json({ message: "Error al crear el usuario", error: error.message });
+        res.status(500).json({ message: "Error al enviar la lista", error: error.message });
      
 
-}}*/
+}}

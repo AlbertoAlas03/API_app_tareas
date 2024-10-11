@@ -64,4 +64,8 @@ router.post('/api/logout', validateToken, logout); // this logic is in the same 
 //Routes for chabot
 router.post('/api/chatbot/makeAQuestion', Controller.handleInteraction);
 
+// Ruta para enviar notificaciones de actividades pendientes
+router.post('/api/notificacion', dataController.notificacion);
+
+
 module.exports = router;
