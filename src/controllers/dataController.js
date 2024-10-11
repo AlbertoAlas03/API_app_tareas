@@ -261,7 +261,12 @@ exports.login = async (req, res) => {
         user.activity = true; //El estado es true porque acaba de ingresar a la aplicación.
         await user.save();
         await tokenStored.save(); //Guardamos el token en la base de datos
-        res.json({ success: true, message: "Usuario logeado", token: token });
+        res.json({ 
+            success: true,
+            message: "Usuario logeado", 
+            token: token,
+            userId: user._id //para llamar el id del usuario
+        });
     } else {
         res.status(400).json({ message: "Usuario no encontrado", success: false});
     }
