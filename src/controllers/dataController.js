@@ -3,7 +3,7 @@ const DataUsers = require('../models/userSchema');
 const DataSchedules = require('../models/scheduleSchema');
 const DataActivity = require('../models/activitySchema');
 const TokenSchema = require('../models/tokensSchema');
-const { generateToken } = require('./jwtUtils');
+const { generateToken, verifyToken } = require('./jwtUtils');
 const nodemailer = require('nodemailer');  
 const { v4: uuidv4 } = require('uuid');  
 
@@ -365,19 +365,19 @@ exports.addactivity = async (req, res, next) => {
     const { name, description, date, status, idUser } = req.body;
 
     const data = new DataActivity({
-        name: name || 0,
-        description: description || 0,
+        name: name || '',
+        description: description || '',
         date: date ? new Date(date) : new Date(),
         status: status || false,
-        idUser: idUser || 0
+        idUser: idUser || ''
     });
 
     try {
-        await data.save();
-        res.json({ message: "Actividad añadida", data: data });
+        const savedData = await data.save();
+        res.status(201).json({ message: "Actividad añadida", data: savedData });
     } catch (error) {
         console.log(error);
-        res.send(error);
+        res.status(500).json({ message: "Error al añadir la actividad", error: error.message });
         next();
     }
 }
@@ -420,31 +420,45 @@ exports.updateactivity = async (req, res, next) => {
             }
         );
         if (!data) {
-            return res.status(400).json({ message: "Actividad no encontrada" })
+            return res.status(400).json({ message: "Actividad no encontrada" });
         }
         res.json({ message: "Actividad actualizada", data: data });
-
     } catch (error) {
         console.log(error);
-        res.status(400).json({ message: "Error" });
+        res.status(400).json({ message: "Error", error: error.message });
         next(error);
     }
-
 };
 
-//buscar todas las actividades
+//ver todas las actividades
 exports.listsactivity = async (req, res) => {
     try {
-        //Get activities filtering by user id
-        const data = await DataActivity.find({idUser: req.params.id});
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = verifyToken(token);
+        const userId = decodedToken.idUser;
+
+        // Verificar que el ID de usuario es correcto
+        if (!userId) {
+            return res.status(400).json({ message: 'ID de usuario no válido' });
+        }
+
+        // Verificar que la consulta a la base de datos está devolviendo datos
+        const data = await DataActivity.find({ idUser: userId });
+        console.log('Actividades encontradas:', data);
+
+        if (data.length === 0) {
+            console.log('No se encontraron actividades para el usuario:', userId);
+        }
+
         res.json(data);
     } catch (error) {
-        console.log(error);
-        res.status(200).send(error);
-        next();
+        console.log('Error en el backend:', error);
+        res.status(500).send(error);
     }
 };
 
+
+//NOTIFICACIONES
 
 //enviar notificaciones(correo) de las actividades pendientes 
 exports.notificacion = async(req, res)=>{
