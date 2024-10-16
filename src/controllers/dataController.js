@@ -366,7 +366,7 @@ exports.addactivity = async (req, res, next) => {
 
     const data = new DataActivity({
         name: name || '',
-        description: description || '',
+        description: description || '(Sin descripción)',
         date: date ? new Date(date) : new Date(),
         status: status || false,
         idUser: idUser || ''
