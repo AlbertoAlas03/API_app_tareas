@@ -84,7 +84,8 @@ const handleInteraction = async (req, res) => {
                     name: state.scheduleName,
                     description: state.scheduleDescription,
                     day: state.scheduleDay,
-                    hour: state.scheduleHour
+                    hour: state.scheduleHour,
+                    idUser: userId //guardando el id del usuario 
                 };
 
                 //fetch POST
@@ -115,7 +116,8 @@ const handleInteraction = async (req, res) => {
                 const activityData = {
                     name: state.activityName,
                     description: state.activityDescription,
-                    date: state.activityDate
+                    date: state.activityDate,
+                    idUser: userId //guardamos con el id del usuario
                 };
 
                 await axios.post('https://api-app-tareas.onrender.com/api/addactivity', activityData, {
