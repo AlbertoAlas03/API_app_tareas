@@ -282,7 +282,6 @@ exports.listshedules = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(200).send(error);
-        next();
     }
 };
 
@@ -433,23 +432,7 @@ exports.updateactivity = async (req, res, next) => {
 //ver todas las actividades
 exports.listsactivity = async (req, res) => {
     try {
-        const token = req.headers.authorization.split(' ')[1];
-        const decodedToken = verifyToken(token);
-        const userId = decodedToken.idUser;
-
-        // Verificar que el ID de usuario es correcto
-        if (!userId) {
-            return res.status(400).json({ message: 'ID de usuario no válido' });
-        }
-
-        // Verificar que la consulta a la base de datos está devolviendo datos
-        const data = await DataActivity.find({ idUser: userId });
-        console.log('Actividades encontradas:', data);
-
-        if (data.length === 0) {
-            console.log('No se encontraron actividades para el usuario:', userId);
-        }
-
+        const data = await DataActivity.find({idUser: req.params.id});
         res.json(data);
     } catch (error) {
         console.log('Error en el backend:', error);
