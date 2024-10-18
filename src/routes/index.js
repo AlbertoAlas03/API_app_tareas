@@ -48,7 +48,7 @@ router.delete('/api/deleteschedule/:id', validateToken, dataController.deletesch
 //rutas para actividades
 router.get('/api/listactivity/:id', validateToken, dataController.listsactivity);
 
-router.post('/api/addactivity/:id', validateToken, dataController.addactivity);
+router.post('/api/addactivity', validateToken, dataController.addactivity);
 
 router.put('/api/updateactivity/:id', validateToken,  dataController.updateactivity);
 
